@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F8F490; /* Define a cor de fundo */
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav {
+    background-color: #9ac140a2;
+    padding: .1rem;
+    padding-right: 3rem;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    width: 54%;
+    align-items: center;
+    margin: 0 auto;
+    
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    
+  }
+  
+  nav ul li {
+    margin: 0;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  button {
+    padding: 0.5rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  input[type="text"],
+  input[type="date"],
+  input[type="time"] {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+  }
+  
+  .App {
+    padding: 1rem;
+  }
+  
