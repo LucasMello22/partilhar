@@ -7,27 +7,37 @@ function ManageDoctors() {
   const [modifyIndex, setModifyIndex] = useState(null);
 
   useEffect(() => {
-    // Carrega os médicos salvos do localStorage ao carregar a página
-    const savedDoctors = localStorage.getItem('doctors');
-    if (savedDoctors) {
-      setDoctors(JSON.parse(savedDoctors));
-    }
+    // Carrega os médicos do backend ao carregar a página
+    fetch('http://localhost:3001/doctors')
+      .then(response => response.json())
+      .then(data => setDoctors(data))
+      .catch(error => console.error('Error fetching doctors:', error));
   }, []);
 
   const handleAddDoctor = () => {
     const newDoctor = { name: doctorName };
-    const updatedDoctors = [...doctors, newDoctor];
-    setDoctors(updatedDoctors);
-    // Salva os médicos atualizados no localStorage
-    localStorage.setItem('doctors', JSON.stringify(updatedDoctors));
+    fetch('http://localhost:3001/doctors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newDoctor)
+    })
+      .then(response => response.json())
+      .then(data => setDoctors([...doctors, data]))
+      .catch(error => console.error('Error adding doctor:', error));
     setDoctorName('');
   };
 
   const handleDeleteDoctor = (index) => {
-    const updatedDoctors = doctors.filter((_, i) => i !== index);
-    setDoctors(updatedDoctors);
-    // Salva os médicos atualizados no localStorage após a exclusão
-    localStorage.setItem('doctors', JSON.stringify(updatedDoctors));
+    fetch(`http://localhost:3001/doctors/${index}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        const updatedDoctors = doctors.filter((_, i) => i !== index);
+        setDoctors(updatedDoctors);
+      })
+      .catch(error => console.error('Error deleting doctor:', error));
   };
 
   const handleModifyDoctor = (index) => {
@@ -38,13 +48,23 @@ function ManageDoctors() {
 
   const handleSaveModifiedName = () => {
     if (modifyIndex !== null) {
-      const updatedDoctors = [...doctors];
-      updatedDoctors[modifyIndex].name = modifiedName;
-      setDoctors(updatedDoctors);
-      // Salva os médicos atualizados no localStorage após a modificação
-      localStorage.setItem('doctors', JSON.stringify(updatedDoctors));
-      setModifiedName('');
-      setModifyIndex(null);
+      const updatedDoctor = { name: modifiedName };
+      fetch(`http://localhost:3001/doctors/${modifyIndex}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedDoctor)
+      })
+        .then(response => response.json())
+        .then(data => {
+          const updatedDoctors = [...doctors];
+          updatedDoctors[modifyIndex] = data;
+          setDoctors(updatedDoctors);
+          setModifiedName('');
+          setModifyIndex(null);
+        })
+        .catch(error => console.error('Error modifying doctor:', error));
     }
   };
 

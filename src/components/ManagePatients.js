@@ -7,27 +7,37 @@ function ManagePatients() {
   const [modifyIndex, setModifyIndex] = useState(null);
 
   useEffect(() => {
-    // Carrega os pacientes salvos do localStorage ao carregar a página
-    const savedPatients = localStorage.getItem('patients');
-    if (savedPatients) {
-      setPatients(JSON.parse(savedPatients));
-    }
+    // Carrega os pacientes do backend ao carregar a página
+    fetch('http://localhost:3001/patients')
+      .then(response => response.json())
+      .then(data => setPatients(data))
+      .catch(error => console.error('Error fetching patients:', error));
   }, []);
 
   const handleAddPatient = () => {
     const newPatient = { name: patientName };
-    const updatedPatients = [...patients, newPatient];
-    setPatients(updatedPatients);
-    // Salva os pacientes atualizados no localStorage
-    localStorage.setItem('patients', JSON.stringify(updatedPatients));
+    fetch('http://localhost:3001/patients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newPatient)
+    })
+      .then(response => response.json())
+      .then(data => setPatients([...patients, data]))
+      .catch(error => console.error('Error adding patient:', error));
     setPatientName('');
   };
 
   const handleDeletePatient = (index) => {
-    const updatedPatients = patients.filter((_, i) => i !== index);
-    setPatients(updatedPatients);
-    // Salva os pacientes atualizados no localStorage após a exclusão
-    localStorage.setItem('patients', JSON.stringify(updatedPatients));
+    fetch(`http://localhost:3001/patients/${index}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        const updatedPatients = patients.filter((_, i) => i !== index);
+        setPatients(updatedPatients);
+      })
+      .catch(error => console.error('Error deleting patient:', error));
   };
 
   const handleModifyPatient = (index) => {
@@ -38,13 +48,23 @@ function ManagePatients() {
 
   const handleSaveModifiedName = () => {
     if (modifyIndex !== null) {
-      const updatedPatients = [...patients];
-      updatedPatients[modifyIndex].name = modifiedName;
-      setPatients(updatedPatients);
-      // Salva os pacientes atualizados no localStorage após a modificação
-      localStorage.setItem('patients', JSON.stringify(updatedPatients));
-      setModifiedName('');
-      setModifyIndex(null);
+      const updatedPatient = { name: modifiedName };
+      fetch(`http://localhost:3001/patients/${modifyIndex}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedPatient)
+      })
+        .then(response => response.json())
+        .then(data => {
+          const updatedPatients = [...patients];
+          updatedPatients[modifyIndex] = data;
+          setPatients(updatedPatients);
+          setModifiedName('');
+          setModifyIndex(null);
+        })
+        .catch(error => console.error('Error modifying patient:', error));
     }
   };
 
