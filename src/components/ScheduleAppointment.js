@@ -11,13 +11,28 @@ function ScheduleAppointment() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    // Carrega os pacientes salvos do localStorage ao carregar a página
-    const savedPatients = JSON.parse(localStorage.getItem('patients')) || [];
-    setPatients(savedPatients);
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/patients');
+        const data = await response.json();
+        setPatients(data);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
 
-    // Carrega os médicos salvos do localStorage ou de outra fonte de dados
-    const savedDoctors = JSON.parse(localStorage.getItem('doctors')) || [];
-    setDoctors(savedDoctors);
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/doctors');
+        const data = await response.json();
+        setDoctors(data);
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
+
+    fetchPatients();
+    fetchDoctors();
   }, []);
 
   const handleChange = (e) => {
