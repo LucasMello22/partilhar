@@ -15,6 +15,7 @@ app.use((req, res, next) => {
 // Caminho para os arquivos JSON
 const patientsFilePath = './patients.json';
 const doctorsFilePath = './doctors.json';
+const appointmentsFilePath = './appointments.json';
 
 // Funções para ler e escrever arquivos JSON
 const readData = (filePath) => {
@@ -105,6 +106,34 @@ app.put('/doctors/:index', (req, res) => {
   } else {
     res.status(404).json({ error: 'Médico não encontrado' });
   }
+});
+
+// Endpoint para consultas
+app.get('/appointments', (req, res) => {
+  const appointments = readData(appointmentsFilePath);
+  res.json(appointments);
+});
+
+app.post('/appointments', (req, res) => {
+  const newAppointment = req.body;
+  const appointments = readData(appointmentsFilePath);
+
+  // Verifica se já existe uma consulta marcada para a mesma data e hora
+  const conflict = appointments.some(appointment => {
+    return (
+      appointment.date === newAppointment.date &&
+      appointment.time === newAppointment.time
+    );
+  });
+
+  if (conflict) {
+    return res.status(400).json({ error: 'Já existe uma consulta marcada para este horário.' });
+  }
+
+  // Se não houver conflito, adiciona a nova consulta
+  appointments.push(newAppointment);
+  writeData(appointmentsFilePath, appointments);
+  res.status(201).json(newAppointment);
 });
 
 app.listen(port, () => {
