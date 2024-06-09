@@ -80,7 +80,7 @@ function ScheduleAppointment() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div style={{ textAlign: 'center', maxWidth: '400px' }}>
-        <h2>Marcar Consulta</h2>
+        <h2 style={ {width:'100%' }}>Marcar Consulta</h2>
         <form onSubmit={handleSubmit}>
           <label>
             Nome do Paciente:
@@ -93,11 +93,11 @@ function ScheduleAppointment() {
           </label>
           <label>
             Data:
-            <input type="date" name="date" value={appointment.date} onChange={handleChange} style={{ width: '100%' }} />
+            <input type="date" name="date" value={appointment.date} onChange={handleChange} style={{ width: '90%' }} />
           </label>
           <label>
             Hora:
-            <input type="time" name="time" value={appointment.time} onChange={handleChange} style={{ width: '100%' }} />
+            <input type="time" name="time" value={appointment.time} onChange={handleChange} style={{ width: '90%' }} />
           </label>
           <label>
             Médico:

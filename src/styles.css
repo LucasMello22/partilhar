@@ -7,14 +7,14 @@ body {
   
   nav {
     background-color: #9ac140a2;
-    padding: .1rem;
-    padding-right: 3rem;
+    padding: 0rem;
+    padding-right: 0rem;
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
-    width: 54%;
+    width: 100%;
     align-items: center;
-    margin: 0 auto;
+
     
   }
   
